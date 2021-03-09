@@ -18,6 +18,7 @@ var (
 	name     string
 	password string
 	host     string
+	port     string
 	db       = "users"
 	//ErrInvalidHexID represents a entity id that is not a valid bson ObjectID
 	ErrInvalidHexID = errors.New("Invalid Id Hex")
@@ -27,6 +28,7 @@ func init() {
 	flag.StringVar(&name, "mongo-user", os.Getenv("MONGO_USER"), "Mongo user")
 	flag.StringVar(&password, "mongo-password", os.Getenv("MONGO_PASS"), "Mongo password")
 	flag.StringVar(&host, "mongo-host", os.Getenv("MONGO_HOST"), "Mongo host")
+	flag.StringVar(&port, "mongo-port", os.Getenv("MONGO_PORT"), "Mongo port")
 }
 
 // Mongo meets the Database interface requirements
@@ -431,9 +433,10 @@ func (m *Mongo) Delete(entity, id string) error {
 }
 
 func getURL() url.URL {
+	hostname := host + ":" + port
 	ur := url.URL{
 		Scheme: "mongodb",
-		Host:   host,
+		Host:   hostname,
 		Path:   db,
 	}
 	if name != "" {
